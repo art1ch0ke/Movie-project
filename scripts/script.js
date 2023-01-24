@@ -1,19 +1,24 @@
 'use strict';
 
-let numberOfFilms;
-
 const personalMovieDB = {
-    count: numberOfFilms,
+    count: undefined,
     movies: {},
     actors: {},
     genres: [],
     privat: false,
     start: function() {
-        numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?', '3');
+        this.count = +prompt('Сколько фильмов вы уже посмотрели?', '3');
     
-        while (numberOfFilms == '' || numberOfFilms == null ||
-         isNaN(numberOfFilms)) {
-            numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?');
+        while (this.count == '' || this.count == null ||
+         isNaN(this.count)) {
+            this.count = +prompt('Сколько фильмов вы уже посмотрели?');
+        }
+    },
+    toggleVisibleMyDB: function() {
+        if (this.privat) { 
+            this.privat = false; 
+        } else { 
+            this.privat = true; 
         }
     },
 
@@ -44,7 +49,7 @@ const personalMovieDB = {
         }
     },
 
-    showMyDB: function(hidden) {
+    showMyDB: function(hidden=this.privat) {
         if (!hidden) {
             console.log(personalMovieDB);
         }
@@ -54,11 +59,22 @@ const personalMovieDB = {
         for (let i = 0; i < 3; i++) {
             personalMovieDB.genres[i] = 
             prompt(`Ваш любимый жанр под номером ${i + 1}:`);
+            if (personalMovieDB.genres[i] == null || 
+                personalMovieDB.genres[i] == '') {
+                    personalMovieDB.genres[i] = 
+                    prompt(`Ваш любимый жанр под номером ${i + 1}:`);
+                    i--;
+            }
         }
+        
+        this.genres.forEach((item, i) => {
+            console.log(`Любимый жанр #${i + 1} — это ${item}`);
+        });
     }
 };
-
-
-//rememberMyFilms();
-//detectPersonalLevel();
-personalMovieDB.writeYourGenres();
+personalMovieDB.start();
+personalMovieDB.showMyDB();
+personalMovieDB.toggleVisibleMyDB();
+personalMovieDB.showMyDB(personalMovieDB.privat);
+personalMovieDB.toggleVisibleMyDB();
+personalMovieDB.showMyDB();
